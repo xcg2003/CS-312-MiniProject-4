@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 function App() {
-  const [formData, setFormData] = useState({ name: '', username: '', message: '' });
+  const [formData, setFormData] = useState({ name: '', username: '', blogPost: '' });
   const [responseMessage, setResponseMessage] = useState(null);
 
   // Handle form input changes
@@ -16,7 +16,7 @@ function App() {
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetch('/', {
+    fetch('/api/posts', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formData),
@@ -24,7 +24,7 @@ function App() {
       .then((response) => response.json())
       .then((data) => {
         if (data.success) {
-          setResponseMessage(data.message); // Show success message
+          setResponseMessage(data.blogPost); // Show success message
         }
       })
       .catch((error) => {
@@ -47,8 +47,8 @@ function App() {
         </label>
         <br />
         <label>
-          Message:
-          <textarea name="message" value={formData.message} onChange={handleChange} required />
+          BlogPost:
+          <textarea name="blogPost" value={formData.blogPost} onChange={handleChange} required />
         </label>
         <br />
         <button type="submit">Submit</button>

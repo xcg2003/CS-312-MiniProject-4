@@ -4,7 +4,7 @@ function BlogDisplay() {
   const [blogPosts, setBlogPosts] = useState([]);
 
   useEffect(() => {
-    fetch('/')
+    fetch('/api/posts')
       .then((response) => response.json())
       .then((data) => setBlogPosts(data))
       .catch((error) => console.error('Error:', error));
@@ -18,7 +18,7 @@ function BlogDisplay() {
           <div key={post.id}>
             <h2>{post.name}</h2>
             <h3>{post.username}</h3>
-            <p>{post.message}</p>
+            <p>{post.blogPost}</p>
           </div>
         ))
       ) : (
