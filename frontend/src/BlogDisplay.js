@@ -45,7 +45,7 @@ function BlogDisplay() {
     })
       .then((response) => response.json())
       .then((updatedPost) => {
-        // Update state with edited post
+        
         setBlogPosts((prevPosts) =>
           prevPosts.map((post) => (post.id === id ? updatedPost : post))
         );

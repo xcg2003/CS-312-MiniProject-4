@@ -41,15 +41,18 @@ function App() {
           <input type="text" name="name" value={formData.name} onChange={handleChange} required />
         </label>
         <br />
+        <br />
         <label>
           Username:
           <input type="text" name="username" value={formData.username} onChange={handleChange} required />
         </label>
         <br />
+        <br />
         <label>
           BlogPost:
           <textarea name="blogPost" value={formData.blogPost} onChange={handleChange} required />
         </label>
+        <br />
         <br />
         <button type="submit">Submit</button>
       </form>
