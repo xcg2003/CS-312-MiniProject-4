@@ -2,13 +2,54 @@ import React, { useEffect, useState } from 'react';
 
 function BlogDisplay() {
   const [blogPosts, setBlogPosts] = useState([]);
+  const [isEditing, setIsEditing] = useState(null);
+  const [editContent, setEditContent] = useState("");
 
+  // Fetch posts from the server
   useEffect(() => {
     fetch('/api/posts')
       .then((response) => response.json())
       .then((data) => setBlogPosts(data))
       .catch((error) => console.error('Error:', error));
   }, []);
+
+  // Handle delete action
+  const handleDelete = (id) => {
+    fetch(`/api/posts/${id}`, {
+      method: 'DELETE',
+    })
+      .then((response) => response.json())
+      .then(() => {
+        // Update state to remove deleted post
+        setBlogPosts((prevPosts) => prevPosts.filter((post) => post.id !== id));
+      })
+      .catch((error) => console.error('Error:', error));
+  };
+
+  // Handle edit action
+  const handleEdit = (id) => {
+    const post = blogPosts.find((post) => post.id === id);
+    setIsEditing(id);
+    setEditContent(post.blogPost);
+  };
+
+  // Handle save after editing
+  const handleSave = (id) => {
+    fetch(`/api/posts/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ blogPost: editContent }),
+    })
+      .then((response) => response.json())
+      .then((updatedPost) => {
+        // Update state with edited post
+        setBlogPosts((prevPosts) =>
+          prevPosts.map((post) => (post.id === id ? updatedPost : post))
+        );
+        setIsEditing(null);
+      })
+      .catch((error) => console.error('Error:', error));
+  };
 
   return (
     <div>
@@ -18,7 +59,21 @@ function BlogDisplay() {
           <div key={post.id}>
             <h2>{post.name}</h2>
             <h3>{post.username}</h3>
-            <p>{post.blogPost}</p>
+            {isEditing === post.id ? (
+              <textarea
+                value={editContent}
+                onChange={(e) => setEditContent(e.target.value)}
+              />
+            ) : (
+              <p>{post.blogPost}</p>
+            )}
+
+            <button onClick={() => handleDelete(post.id)}>Delete</button>
+            {isEditing === post.id ? (
+              <button onClick={() => handleSave(post.id)}>Save</button>
+            ) : (
+              <button onClick={() => handleEdit(post.id)}>Edit</button>
+            )}
           </div>
         ))
       ) : (
@@ -29,3 +84,4 @@ function BlogDisplay() {
 }
 
 export default BlogDisplay;
+

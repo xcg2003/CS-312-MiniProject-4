@@ -24,6 +24,31 @@ app.post('/api/posts', (req, res) => {
     res.json({success: true, message: 'Post added!'});
 });
 
+app.delete('/api/posts/:id', (req, res) => {
+    const postId = parseInt(req.params.id);
+    const postIndex = blogPosts.findIndex(post => post.id === postId);
+
+    if (postIndex !== -1) {
+        blogPosts.splice(postIndex, 1);
+        res.json({ success: true, message: 'Post deleted!' });
+    } else {
+        res.status(404).json({ success: false, message: 'Post not found!' });
+    }
+});
+
+app.put('/api/posts/:id', (req, res) => {
+    const postId = parseInt(req.params.id);
+    const postIndex = blogPosts.findIndex(post => post.id === postId);
+
+    if (postIndex !== -1) {
+        const { blogPost } = req.body;  // Only updating the `blogPost` content
+        blogPosts[postIndex].blogPost = blogPost;
+        res.json({ success: true, message: 'Post updated!', post: blogPosts[postIndex] });
+    } else {
+        res.status(404).json({ success: false, message: 'Post not found!' });
+    }
+});
+
 app.get('/viewPosts', (req, res) => {
     res.send("Hello World! viewPosts");
 });
