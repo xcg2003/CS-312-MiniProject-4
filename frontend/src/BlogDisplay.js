@@ -13,6 +13,9 @@ function BlogDisplay() {
       .catch((error) => console.error('Error:', error));
   }, []);
 
+  console.log("Current blog posts in render:", blogPosts);
+
+
   // Handle delete action
   const handleDelete = (id) => {
     fetch(`/api/posts/${id}`, {
@@ -56,7 +59,7 @@ function BlogDisplay() {
       <h1>Blog Posts</h1>
       {blogPosts.length > 0 ? (
         blogPosts.map((post) => (
-          <div key={post.id}>
+          <div key={`${post.id}-${post.username}-${post.name}`}>
             <h2>{post.name}</h2>
             <h3>{post.username}</h3>
             {isEditing === post.id ? (
@@ -67,7 +70,6 @@ function BlogDisplay() {
             ) : (
               <p>{post.blogPost}</p>
             )}
-
             <button onClick={() => handleDelete(post.id)}>Delete</button>
             {isEditing === post.id ? (
               <button onClick={() => handleSave(post.id)}>Save</button>
@@ -84,4 +86,3 @@ function BlogDisplay() {
 }
 
 export default BlogDisplay;
-

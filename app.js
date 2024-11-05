@@ -41,13 +41,24 @@ app.put('/api/posts/:id', (req, res) => {
     const postIndex = blogPosts.findIndex(post => post.id === postId);
 
     if (postIndex !== -1) {
-        const { blogPost } = req.body;  // Only updating the `blogPost` content
+        const { blogPost } = req.body;  
         blogPosts[postIndex].blogPost = blogPost;
-        res.json({ success: true, message: 'Post updated!', post: blogPosts[postIndex] });
+
+        res.json({
+            success: true,
+            message: 'Post updated!',
+            post: { 
+                id: blogPosts[postIndex].id,
+                name: blogPosts[postIndex].name,
+                username: blogPosts[postIndex].username,
+                blogPost: blogPosts[postIndex].blogPost 
+            }
+        });
     } else {
         res.status(404).json({ success: false, message: 'Post not found!' });
     }
 });
+
 
 app.get('/viewPosts', (req, res) => {
     res.send("Hello World! viewPosts");
